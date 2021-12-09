@@ -7,7 +7,7 @@
   "author": "Drewclam <andrew.lam@rangle.io>",
   "license": "MIT",
   "scripts": {
-    "test": "jest"
+    "test": "jest --watch --runTestsByPath"
   },
   "devDependencies": {
     "jest": "^21.2.1"
