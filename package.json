@@ -10,6 +10,6 @@
     "test": "jest --watch --runTestsByPath"
   },
   "devDependencies": {
-    "jest": "^21.2.1"
+    "jest": "^27.4.3"
   }
 }
