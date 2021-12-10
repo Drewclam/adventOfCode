@@ -1,10 +1,10 @@
 const { sample, input } = require('./input');
-const { parse, getAdjacent, isLowest, getRiskLevelsSum, solveP1, getBasin, solveP2 } = require('./d5');
+const { parse, getAdjacent, isLowest, getRiskLevelsSum, solveP1, getBasin, solveP2 } = require('./d9');
 
 const parsedSample = parse(sample);
 const parsedInput = parse(input);
 
-describe('d5', () => {
+describe('d9', () => {
     it('parses into array of arrays', () => {
         expect(parsedSample).toEqual([
             [2, 1, 9, 9, 9, 4, 3, 2, 1, 0],

@@ -1,5 +1,5 @@
 const { findEntriesForSum, findEntriesForSum2 } = require("./d1");
-const { parseInput } = require("../utils/parseInput");
+const { parseInput } = require("../../utils/parseInput");
 
 describe("d1", () => {
   it("should solve example 1", () => {
