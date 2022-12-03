@@ -7,7 +7,7 @@
   "author": "Drewclam <andrew.lam@rangle.io>",
   "license": "MIT",
   "scripts": {
-    "start": "npx",
+    "start": "nodemon",
     "test": "jest --watch --runTestsByPath"
   },
   "devDependencies": {
