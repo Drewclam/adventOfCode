@@ -36,3 +36,4 @@ const getAnswer = (input: string, comparisonFn: Function) => {
 
 // getAnswer(input, isSubset);
 console.log(getAnswer(input, hasOverlap));
+export {};
