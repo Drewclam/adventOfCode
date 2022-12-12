@@ -47,21 +47,56 @@ const createStacks = (stackKeys: string[], twoDimensionArr: string[][]) => {
   return stacks;
 };
 const unwrapBox = (box: string) => (!!box ? box[1] : box);
+const singleMoves = (
+  stacks: { [key: string]: string[] },
+  amount: number,
+  start: string,
+  destination: string,
+) => {
+  for (let i = 0; i < amount; i++) {
+    const box = stacks[start].pop();
+    if (box) {
+      stacks[destination].push(box);
+    }
+  }
+  return stacks;
+};
+const multiMoves = (
+  stacks: { [key: string]: string[] },
+  amount: number,
+  start: string,
+  destination: string,
+) => {
+  const tempStack = [];
+  for (let i = 0; i < amount; i++) {
+    const box = stacks[start].pop();
+    if (box) {
+      tempStack.push(box);
+    }
+  }
+  tempStack.reverse().forEach((box) => {
+    stacks[destination].push(box);
+  });
+};
 
-const executeInstructions = (input, instructions) => {
+const executeInstructions = (
+  input,
+  instructions,
+  executeInstruction: (
+    stacks: { [key: string]: string[] },
+    amount: number,
+    start: string,
+    destination: string,
+  ) => any,
+) => {
   const [keys, twoDimensionalArr] = parseInput(input);
   const stacks = createStacks(keys, twoDimensionalArr);
   const parsedInstructions: string[][] = instructions.split('\n').map(parseInstruction);
-  console.log({ keys, stacks });
 
   parsedInstructions.forEach(([amountStr, startKey, destinationKey]) => {
     const amount = Number(amountStr);
-    for (let i = 0; i < amount; i++) {
-      const box = stacks[startKey].pop();
-      if (box) {
-        stacks[destinationKey].push(box);
-      }
-    }
+    executeInstruction(stacks, amount, startKey, destinationKey);
+    console.log({ stacks });
   });
   const topStackAggregate = Object.values(stacks).reduce((aggregate, stack) => {
     const box = unwrapBox(stack.pop());
@@ -74,6 +109,6 @@ const executeInstructions = (input, instructions) => {
   return topStackAggregate;
 };
 
-executeInstructions(input, instructions);
+executeInstructions(input, instructions, multiMoves);
 
 export {};
