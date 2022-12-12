@@ -23,32 +23,44 @@ $ ls
 5626152 d.ext
 7214296 k`;
 
-interface Node {
-  id: string;
-  size: number;
-  children: Node[];
-  parent: Node;
-}
 const ROOT_ID = '/';
 const COMMAND_ID = '$';
 const CREATE_DIR = 'dir';
 const LIST = 'ls';
 const CHANGE_DIRECTORY = 'cd';
+enum DIRECTORY_TYPE {
+  FILE,
+  DIRECTORY,
+}
+interface Node {
+  id: string;
+  type: DIRECTORY_TYPE;
+  size: number;
+  children: Node[];
+  parent: Node;
+}
 
 const parseInput = (input: string) => input.split('\n');
 
+const isDirectory = (node: Node) => node.type === DIRECTORY_TYPE.DIRECTORY;
+const isFile = (node: Node) => node.type === DIRECTORY_TYPE.FILE;
+
+const addNode = (node: Node, id: string, size: number, parent: Node) => {
+  const newNode = buildNode(id, parent, size);
+  node.children.push(newNode);
+  newNode.parent = node;
+
+  if (isFile(newNode)) {
+    updateDirectorySizes(node, newNode.size);
+  }
+};
 const buildNode = (id: string, parent?: Node, size = 0): Node => ({
   id,
   size,
   children: [],
   parent,
+  type: size === 0 ? DIRECTORY_TYPE.DIRECTORY : DIRECTORY_TYPE.FILE,
 });
-const isRootNode = (node: Node) => node.id === ROOT_ID || node.parent === undefined;
-const addNode = (node: Node, id: string, size: number, parent: Node) => {
-  const newNode = buildNode(id, parent, size);
-  node.children.push(newNode);
-  newNode.parent = node;
-};
 
 const changeDirectory = (root: Node, currentDir: Node, dirId: string) => {
   if (dirId === ROOT_ID) {
@@ -97,6 +109,18 @@ const executeCommand = (
 
   throw new Error('Unknown command!');
 };
+/* When a file is added, update parent directories. */
+const updateDirectorySizes = (node: Node, size: number) => {
+  if (isDirectory(node)) {
+    node.size += size;
+  } else {
+    throw new Error(`updateDirectorySize was not called on directory/root node: ${node.id}`);
+  }
+
+  if (!!node.parent) {
+    updateDirectorySizes(node.parent, size);
+  }
+};
 
 const getAnswer = (input: string) => {
   const commands = parseInput(input);
@@ -108,8 +132,9 @@ const getAnswer = (input: string) => {
     if (!root) {
       root = workingDir;
     }
-    console.log({ rawCommand, pointer: workingDir });
+    // console.log({ rawCommand, pointer: workingDir });
   });
+  console.log('hllo', root.children);
 };
 
 getAnswer(sampleInput);
