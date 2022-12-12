@@ -45,11 +45,24 @@ const parseInput = (input: string) => input.split('\n');
 const isDirectory = (node: Node) => node.type === DIRECTORY_TYPE.DIRECTORY;
 const isFile = (node: Node) => node.type === DIRECTORY_TYPE.FILE;
 
+const updateDirectorySizes = (node: Node, size: number) => {
+  if (isDirectory(node)) {
+    node.size += size;
+  } else {
+    throw new Error(`updateDirectorySize was not called on directory/root node: ${node.id}`);
+  }
+
+  if (!!node.parent) {
+    updateDirectorySizes(node.parent, size);
+  }
+};
+
 const addNode = (node: Node, id: string, size: number, parent: Node) => {
   const newNode = buildNode(id, parent, size);
   node.children.push(newNode);
   newNode.parent = node;
 
+  /* When a file is added, update parent directories. */
   if (isFile(newNode)) {
     updateDirectorySizes(node, newNode.size);
   }
@@ -109,17 +122,21 @@ const executeCommand = (
 
   throw new Error('Unknown command!');
 };
-/* When a file is added, update parent directories. */
-const updateDirectorySizes = (node: Node, size: number) => {
-  if (isDirectory(node)) {
-    node.size += size;
-  } else {
-    throw new Error(`updateDirectorySize was not called on directory/root node: ${node.id}`);
+
+const getDirectoriesSum = (node: Node, sum = 0) => {
+  if (node.children.length < 1) {
+    return 0;
+  }
+  if (node.size <= 100000) {
+    sum += node.size;
   }
 
-  if (!!node.parent) {
-    updateDirectorySizes(node.parent, size);
-  }
+  node.children.forEach((child) => {
+    if (isDirectory(child)) {
+      sum += getDirectoriesSum(child);
+    }
+  });
+  return sum;
 };
 
 const getAnswer = (input: string) => {
@@ -132,9 +149,9 @@ const getAnswer = (input: string) => {
     if (!root) {
       root = workingDir;
     }
-    // console.log({ rawCommand, pointer: workingDir });
   });
-  console.log('hllo', root.children);
+  const sum = getDirectoriesSum(root);
+  console.log({ sum });
 };
 
-getAnswer(sampleInput);
+getAnswer(input);
