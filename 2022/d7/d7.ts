@@ -45,6 +45,8 @@ const parseInput = (input: string) => input.split('\n');
 const isDirectory = (node: Node) => node.type === DIRECTORY_TYPE.DIRECTORY;
 const isFile = (node: Node) => node.type === DIRECTORY_TYPE.FILE;
 
+const getMinDiskSpaceNeeded = (root: Node) => 30000000 - (70000000 - root.size);
+
 const updateDirectorySizes = (node: Node, size: number) => {
   if (isDirectory(node)) {
     node.size += size;
@@ -138,6 +140,21 @@ const getDirectoriesSum = (node: Node, sum = 0) => {
   });
   return sum;
 };
+const getDirectoryToDelete = (node: Node, min: number, size?: number) => {
+  if (isDirectory(node) && node.size >= min) {
+    size = node.size;
+  }
+  if (!node.children.some(isDirectory)) {
+    return size;
+  }
+
+  node.children.forEach((child) => {
+    if (isDirectory(child)) {
+      size = getDirectoryToDelete(child, min, size);
+    }
+  });
+  return size;
+};
 
 const getAnswer = (input: string) => {
   const commands = parseInput(input);
@@ -151,7 +168,8 @@ const getAnswer = (input: string) => {
     }
   });
   const sum = getDirectoriesSum(root);
-  console.log({ sum });
+  const dirToDelete = getDirectoryToDelete(root, getMinDiskSpaceNeeded(root));
+  console.log({ sum, dirToDelete });
 };
 
 getAnswer(input);
