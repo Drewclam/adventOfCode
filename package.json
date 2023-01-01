@@ -11,9 +11,11 @@
     "test": "jest --watch --runTestsByPath"
   },
   "devDependencies": {
+    "@types/jest": "^29.2.5",
     "jest": "^27.4.3",
     "nodemon": "^2.0.20",
     "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.1.1",
     "typescript": "^4.9.3"
   }
 }
