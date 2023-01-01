@@ -39,27 +39,69 @@ export const getWestValsExclusive = (arr: number[][], rowIdx, colIdx) => {
 
 export const isVisible = (arr: number[], val: number) => arr.every((v) => val > v);
 
-build2DArr().then((arr) => {
-  console.log({ arr });
-  const visibleVals = [];
+export const solvePart1 = () => {
+  build2DArr().then((arr) => {
+    const visibleVals = [];
 
-  for (let i = 0; i < arr.length; i++) {
-    for (let j = 0; j < arr[i].length; j++) {
-      const northVals = getNorthValsExclusive(arr, i, j);
-      const eastVals = getEastValsExclusive(arr, i, j);
-      const southVals = getSouthValsExclusive(arr, i, j);
-      const westVals = getWestValsExclusive(arr, i, j);
-      const val = arr[i][j];
+    for (let i = 0; i < arr.length; i++) {
+      for (let j = 0; j < arr[i].length; j++) {
+        const northVals = getNorthValsExclusive(arr, i, j);
+        const eastVals = getEastValsExclusive(arr, i, j);
+        const southVals = getSouthValsExclusive(arr, i, j);
+        const westVals = getWestValsExclusive(arr, i, j);
+        const val = arr[i][j];
 
-      if (
-        isVisible(northVals, val) ||
-        isVisible(eastVals, val) ||
-        isVisible(southVals, val) ||
-        isVisible(westVals, val)
-      ) {
-        visibleVals.push(val);
+        if (
+          isVisible(northVals, val) ||
+          isVisible(eastVals, val) ||
+          isVisible(southVals, val) ||
+          isVisible(westVals, val)
+        ) {
+          visibleVals.push(val);
+        }
       }
     }
+    console.log({ visibleVals: visibleVals.length });
+  });
+};
+
+const getTreeView = (treeLine: number[], val: number) => {
+  let view = 0;
+  for (let i = 0; i < treeLine.length; i++) {
+    view += 1;
+    if (val <= treeLine[i]) {
+      break;
+    }
   }
-  console.log({ visibleVals: visibleVals.length });
-});
+  return view;
+};
+
+export const solvePart2 = () => {
+  let best = 0;
+
+  build2DArr().then((arr) => {
+    for (let i = 0; i < arr.length; i++) {
+      for (let j = 0; j < arr[i].length; j++) {
+        const northVals = getNorthValsExclusive(arr, i, j);
+        const eastVals = getEastValsExclusive(arr, i, j);
+        const southVals = getSouthValsExclusive(arr, i, j);
+        const westVals = getWestValsExclusive(arr, i, j);
+        const val = arr[i][j];
+
+        const northView = getTreeView(northVals, val);
+        const eastView = getTreeView(eastVals, val);
+        const westView = getTreeView(westVals, val);
+        const southView = getTreeView(southVals, val);
+
+        const scenicScore = northView * eastView * westView * southView;
+        if (scenicScore > best) {
+          best = scenicScore;
+        }
+      }
+    }
+    console.log({ best });
+  });
+};
+
+solvePart1();
+solvePart2();
