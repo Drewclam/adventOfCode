@@ -15,8 +15,24 @@ const shouldUpdateTail = (head: Position, tail: Position) =>
 
 const update = (head: Position, tail: Position, newHeadPos: Position) => {
   if (shouldUpdateTail(newHeadPos, tail)) {
-    tail.x = head.x;
-    tail.y = head.y;
+    if (newHeadPos.x === tail.x || newHeadPos.y === tail.y) {
+      tail.x = head.x;
+      tail.y = head.y;
+    } else {
+      if (newHeadPos.y > tail.y && newHeadPos.x > tail.x) {
+        tail.x += 1;
+        tail.y += 1;
+      } else if (newHeadPos.y > tail.y && newHeadPos.x < tail.x) {
+        tail.x -= 1;
+        tail.y += 1;
+      } else if (newHeadPos.y < tail.y && newHeadPos.x > tail.x) {
+        tail.x += 1;
+        tail.y -= 1;
+      } else {
+        tail.x -= 1;
+        tail.y -= 1;
+      }
+    }
   }
   head.x = newHeadPos.x;
   head.y = newHeadPos.y;
