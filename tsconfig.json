@@ -1,17 +1,27 @@
 {
   "compilerOptions": {
-      "target": "es6",
-      "module": "commonjs",
-      "sourceMap": false,
-      "lib": ["es6"],
-      "types": ["node", "jest"],
-      "baseUrl": ".",
-      "paths": {
-        "utils": ["utils/utils.ts"]
-      }
+    "target": "es6",
+    "module": "commonjs",
+    "sourceMap": true,
+    "lib": [
+      "es6"
+    ],
+    "types": [
+      "node",
+      "jest"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "utils": [
+        "utils/utils.ts"
+      ]
+    },
+    "moduleDetection": "force"
   },
   "ts-node": {
     // Do not forget to `npm i -D tsconfig-paths`
-    "require": ["tsconfig-paths/register"]
+    "require": [
+      "tsconfig-paths/register"
+    ]
   }
 }
