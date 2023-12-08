@@ -1,4 +1,4 @@
-const { pow } = require('../utils/pow');
+const { product } = require('../utils/product');
 const { sum } = require('../utils/sum');
 
 const input = `Game 1: 4 red, 5 blue, 9 green; 7 green, 7 blue, 3 red; 16 red, 7 blue, 3 green; 11 green, 11 blue, 6 red; 12 red, 14 blue
@@ -166,7 +166,7 @@ const getMinimumCubes = game => {
 
 const answer2 = sum(input.split('\n').map(parseGame).map(game => {
     const minimums = Object.values(getMinimumCubes(game));
-    return pow(minimums);
+    return product(minimums);
 }));
 
 console.log({ answer2, answer1 })
